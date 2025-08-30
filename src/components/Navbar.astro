@@ -1,0 +1,64 @@
+---
+import Container from "./Container.astro";
+
+const navItems = [
+  { text: "Projects", href: "/projects" },
+  { text: "Blog", href: "/blog" },
+  { text: "Contact", href: "/contact" },
+];
+---
+
+<nav class="nav">
+  <Container>
+    <div class="nav-container">
+      <a href="/">
+        <img src="/images/logo.svg" alt="Logo" />
+      </a>
+      <ul class="nav-items">
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={item.href}>{item.text}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Container>
+
+  <style>
+    nav {
+      background: var(--secondary);
+
+      img {
+        height: 20px;
+      }
+
+      .nav-container {
+        display: flex;
+        padding: 24px 0;
+        justify-content: space-between;
+        align-items: center;
+
+        .nav-items {
+          list-style-type: none;
+          display: flex;
+          gap: 24px;
+
+          a {
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 18px;
+          }
+        }
+
+        @media screen and (max-width: 500px) {
+          & {
+            flex-direction: column;
+            gap: 16px;
+          }
+        }
+      }
+    }
+  </style>
+</nav>

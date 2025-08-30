@@ -1,0 +1,38 @@
+---
+interface Props {
+  href: string;
+  text: string;
+  variant?: "primary" | "secondary";
+  isDownload?: boolean;
+}
+
+const { href, text, variant = "primary", isDownload } = Astro.props as Props;
+---
+
+<a href={href} class={`button-link ${variant}`} download={isDownload}>
+  {text}
+</a>
+
+<style>
+  .button-link {
+    padding: 14px 32px;
+    display: block;
+    underline: none;
+    width: 230px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .primary {
+    background: var(--primary);
+    color: white;
+  }
+
+  .secondary {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+  }
+</style>

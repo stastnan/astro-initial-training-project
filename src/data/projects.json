@@ -1,0 +1,29 @@
+[
+  {
+    "title": "E-commerce Dashbord",
+    "slug": "project-1",
+    "description":
+      "A fast, scalable admin panel for managing products, orders, and sales analytics. Built with React, Next.js, Firebase, and TailwindCSS.",
+    "image": "/images/projects/placeholder-1.png",
+    "githubURL": "https://google.com",
+    "liveSiteURL": "https://google.com"
+  },
+  {
+    "title": "SaaS Landing Page",
+    "slug": "project-2",
+    "description":
+      "A redesign of ABC’s landing page, improving UI/UX, conversion rates, and performance. Built with Next.js, TailwindCSS, and Framer Motion.",
+    "image": "/images/projects/placeholder-2.png",
+    "githubURL": "https://google.com",
+    "liveSiteURL": "https://google.com"
+  },
+  {
+    "title": "DevTools Chrome Extension",
+    "slug": "project-3",
+    "description":
+      "A Chrome DevTools extension for monitoring API requests in real-time. It provides live request logging and response analysis for developers.",
+    "image": "/images/projects/placeholder-3.png",
+    "githubURL":"https://google.com",
+    "liveSiteURL": "https://google.com"
+  }
+]

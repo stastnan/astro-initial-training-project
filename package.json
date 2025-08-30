@@ -1,0 +1,15 @@
+{
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "astro build",
+    "dev": "astro dev"
+  },
+  "dependencies": {
+    "astro": "^5.12.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.4"
+  }
+}
