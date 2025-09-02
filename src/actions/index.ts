@@ -1,27 +1,32 @@
 import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "zod";
 
-async function sendContactEmail({
-  name, email, message,
-}: { name: string; email: string; message: string }) {
-  console.log("[contact]", { name, email, message });
-}
+const fromForm = z.preprocess((v) => (v == null ? "" : v), z.string());
 
 export const server = {
   contact: defineAction({
     accept: "form",
     input: z.object({
-      name: z.string().min(1),
-      email: z.string().email(),
-      message: z.string().min(1),
-      company: z.string().max(0).optional().default(""),
-      locale: z.string().optional(),
+      name: fromForm.pipe(z.string().trim().min(1, "Name is required.")),
+      email: fromForm.pipe(
+        z.string().trim().email("Please enter a valid email.")
+      ),
+      message: fromForm.pipe(
+        z.string().trim().min(10, "Message must be at least 10 characters.")
+      ),
+      // Honeypot
+      company: z
+        .preprocess((v) => (v == null ? "" : v), z.string())
+        .pipe(z.string().trim())
+        .optional()
+        .default(""),
     }),
     async handler({ name, email, message, company }) {
-      if (company && company.trim().length > 0) {
-        return { ok: true };
-      }
-      await sendContactEmail({ name, email, message });
+      // Honeypot - if exists, silently succeed
+      if (company) return { ok: true };
+
+      console.log("VALIDATED ACTION CALLED", { name, email, message });
+      // TODO:  save to DB
       return { ok: true };
     },
   }),

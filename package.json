@@ -4,12 +4,15 @@
   "version": "0.0.1",
   "scripts": {
     "build": "astro build",
-    "dev": "astro dev"
+    "dev": "astro dev",
+    "start": "bun run ./dist/server/entry.mjs"
   },
   "dependencies": {
-    "astro": "^5.12.3"
+    "astro": "^5.12.3",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@nurodev/astro-bun": "^2.0.5",
     "tsx": "^4.20.4"
   }
 }

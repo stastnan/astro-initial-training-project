@@ -1,68 +1,112 @@
 ---
 import Section from "./Section.astro";
-import { server } from "../actions";
-import { isInputError } from "astro:actions";
+import { actions, isInputError } from "astro:actions";
 
-const result = Astro.getActionResult(server.contact);
-const errs = isInputError(result?.error) ? result.error.fields : {};
+type FieldErrors = Record<string, string[]>;
+
+const result = Astro.getActionResult(actions.contact);
+const errs: FieldErrors = isInputError(result?.error)
+  ? result.error.fields
+  : {};
+
+const hasError = (k: string) => Array.isArray(errs[k]) && errs[k].length > 0;
+const errorText = (k: string) => (hasError(k) ? errs[k].join(" ") : "");
 ---
 
 <Section>
   <div class="wrapper">
     <h2 class="h">Contact me</h2>
     <p class="description">
-      Have a project in mind? Send me a message and I’ll get back to you.
+      Have a project in mind? Send me a message and I'll get back to you.
     </p>
 
     {
-      result?.data && result.data.ok && (
-        <p class="alert success">Thanks! Your message was sent.</p>
-      )
-    }
-    {
-      result?.error && (
-        <p class="alert error">Something went wrong. Please try again.</p>
+      result?.data?.ok && (
+        <p class="alert success" role="alert" aria-live="polite">
+          Thanks! Your message was sent.
+        </p>
       )
     }
 
-    <form method="POST" action={server.contact} class="form" novalidate>
+    {
+      result?.error && (
+        <p class="alert error" role="alert" aria-live="assertive">
+          Please fix the errors below and resubmit.
+        </p>
+      )
+    }
+
+    <form
+      method="POST"
+      action={actions.contact}
+      class="form"
+      novalidate
+      data-astro-reload
+    >
       <label>
         <span>Name</span>
         <input
+          transition:persist
+          id="name"
           name="name"
           required
           autocomplete="name"
-          aria-invalid={!!errs.name || undefined}
+          aria-invalid={hasError("name") ? "true" : undefined}
+          aria-describedby={hasError("name") ? "name-error" : undefined}
         />
-        {errs.name && <small class="field-error">{errs.name}</small>}
+        {
+          hasError("name") && (
+            <small id="name-error" class="field-error">
+              {errorText("name")}
+            </small>
+          )
+        }
       </label>
 
       <label>
         <span>Email</span>
         <input
+          transition:persist
+          id="email"
           type="email"
           name="email"
           required
           autocomplete="email"
-          aria-invalid={!!errs.email || undefined}
+          inputmode="email"
+          aria-invalid={hasError("email") ? "true" : undefined}
+          aria-describedby={hasError("email") ? "email-error" : undefined}
         />
-        {errs.email && <small class="field-error">{errs.email}</small>}
+        {
+          hasError("email") && (
+            <small id="email-error" class="field-error">
+              {errorText("email")}
+            </small>
+          )
+        }
       </label>
 
       <label>
         <span>Message</span>
         <textarea
+          transition:persist
+          id="message"
           name="message"
           rows="6"
           required
-          aria-invalid={!!errs.message || undefined}></textarea>
-        {errs.message && <small class="field-error">{errs.message}</small>}
+          aria-invalid={hasError("message") ? "true" : undefined}
+          aria-describedby={hasError("message") ? "message-error" : undefined}
+        ></textarea>
+        {
+          hasError("message") && (
+            <small id="message-error" class="field-error">
+              {errorText("message")}
+            </small>
+          )
+        }
       </label>
 
-      <!-- Honeypot -->
-      <label class="hp" aria-hidden="true">
-        <input name="company" tabindex="-1" autocomplete="off" />
-      </label>
+      <!-- Honeypot (hidden from layout & a11y tree) -->
+      <input name="company" hidden tabindex="-1" autocomplete="off" />
 
       <button class="btn primary" type="submit">Send Message</button>
     </form>
@@ -125,20 +169,17 @@ const errs = isInputError(result?.error) ? result.error.fields : {};
   .alert {
     margin-top: 12px;
   }
+
   .success {
     color: #1b8f3a;
   }
+
   .error {
     color: #c0392b;
   }
+
   .field-error {
     color: #c0392b;
     font-size: 0.9em;
-  }
-
-  .hp {
-    position: absolute;
-    left: -9999px;
-    visibility: hidden;
   }
 </style>

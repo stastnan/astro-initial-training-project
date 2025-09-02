@@ -1,5 +1,7 @@
+import { defineConfig } from 'astro/config';
+import bun from '@nurodev/astro-bun';
 
-import { defineConfig } from "astro/config";
 export default defineConfig({
-
+  output: 'server',
+  adapter: bun(),
 });
